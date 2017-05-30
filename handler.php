@@ -3,18 +3,16 @@
 header('Content-Type: text/plain; charset=utf-8');
 
 try {
-
-    // Undefined | Multiple Files | $_FILES Corruption Attack
     // If this request falls under any of them, treat it invalid.
     if (
-        !isset($_FILES['upfile']['error']) ||
-        is_array($_FILES['upfile']['error'])
+        !isset($_FILES['file-select']['error']) || /* Referencing file by html <input name=""/> */
+        is_array($_FILES['file-select']['error'])  /* ['upfile'] is also a valid reference */
     ) {
         throw new RuntimeException('Invalid parameters.');
     }
 
-    // Check $_FILES['upfile']['error'] value.
-    switch ($_FILES['upfile']['error']) {
+    // Check $_FILES['file-select']['error'] value.
+    switch ($_FILES['file-select']['error']) {
         case UPLOAD_ERR_OK:
             break;
         case UPLOAD_ERR_NO_FILE:
@@ -26,36 +24,42 @@ try {
             throw new RuntimeException('Unknown errors.');
     }
 
-    // You should also check filesize here.
-    if ($_FILES['upfile']['size'] > 1000000) {
-        throw new RuntimeException('Exceeded filesize limit.');
-    }
+    /* TODO : Find our PHP .ini and figure out what file size we can support */
 
-    // DO NOT TRUST $_FILES['upfile']['mime'] VALUE !!
-    // Check MIME Type by yourself.
+    //if ($_FILES['file-select']['size'] > 1000000) {
+    //    throw new RuntimeException('Exceeded filesize limit.');
+    //}
+
+    /* TODO : What is MIME type */
+
     $finfo = new finfo(FILEINFO_MIME_TYPE);
-    if (false === $ext = array_search(
-        $finfo->file($_FILES['upfile']['tmp_name']),
-        array(
-            'jpg' => 'image/jpeg',
-            'png' => 'image/png',
-            'gif' => 'image/gif',
-        ),
-        true
+
+    /* finfo class reference, will be removing soon
+    ** --------------------------------------------
+    ** finfo {
+    **    public __construct ([ int $options = FILEINFO_NONE [, string $magic_file = NULL ]] )
+    **    public string buffer ( string $string = NULL [, int $options = FILEINFO_NONE [, resource $context = NULL ]] )
+    **    public string file ( string $file_name = NULL [, int $options = FILEINFO_NONE [, resource $context = NULL ]] )
+    **    public bool set_flags ( int $options )
+    ** }
+    ** --------------------------------------------
+    */
+
+    if (false === $ext = array_search(                  /* Setting .extension variable and performing a strict equality operation */
+      $finfo->file($_FILES["file-select"]['tmp_name']), /* Searching the file array for match                                     */
+        array('jgrv' => 'file-select/jgrv',),           /* Looking for a match                                                    */
+          true                                          /* true = strict search criteria .. exact matches ONLY                    */
     )) {
         throw new RuntimeException('Invalid file format.');
     }
 
-    // You should name it uniquely.
-    // DO NOT USE $_FILES['upfile']['name'] WITHOUT ANY VALIDATION !!
-    // On this example, obtain safe unique name from its binary data.
-    if (!move_uploaded_file(
-        $_FILES['upfile']['tmp_name'],
-        sprintf('./uploads/%s.%s',
-            sha1_file($_FILES['upfile']['tmp_name']),
-            $ext
-        )
-    )) {
+    if (!move_uploaded_file(                             /* Function() moves uploaded file to destination */
+      $_FILES['file-select']['tmp_name'],                /* File to print *********************************/
+        sprintf('./testdata/%s.%s',                      /* Printing file name ****************************/
+          sha1_file($_FILES['file-select']['tmp_name']), /* Hashing function for security *****************/
+            $ext)                                        /* File extension *******************************/
+    )
+  ) {
         throw new RuntimeException('Failed to move uploaded file.');
     }
 
@@ -67,9 +71,13 @@ try {
 
 }
 
+/*********************************************************************************************
+** Everything below here is essentially the same code as above.
+** There are error-checking methods with validation and appropriate termination
+** Given no errors, the script should invoke move_uploaded_file() and complete the transaction
+*********************************************************************************************/
+
 /*
-
-
 $target_dir = "testdata/"; // Specify target directory
 $target_file = $target_dir . basename($_FILES["data"]['name']);
 $uploadOk = 1;
