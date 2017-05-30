@@ -5,8 +5,8 @@ header('Content-Type: text/plain; charset=utf-8');
 try {
     // If this request falls under any of them, treat it invalid.
     if (
-        !isset($_FILES['file-select']['error']) || /* Referencing file by html <input name=""/> */
-        is_array($_FILES['file-select']['error'])  /* ['upfile'] is also a valid reference */
+        !isset($_FILES['file-select']['error']) || /* Referencing file by html <input ID=""/> */
+        is_array($_FILES['file-select']['error'])  /* ['userfile'] is also a valid reference    */
     ) {
         throw new RuntimeException('Invalid parameters.');
     }
@@ -46,7 +46,7 @@ try {
     */
 
     if (false === $ext = array_search(                  /* Setting .extension variable and performing a strict equality operation */
-      $finfo->file($_FILES["file-select"]['tmp_name']), /* Searching the file array for match                                     */
+      $finfo->file($_FILES['file-select']['tmp_name']), /* Searching the file array for match                                     */
         array('jgrv' => 'file-select/jgrv',),           /* Looking for a match                                                    */
           true                                          /* true = strict search criteria .. exact matches ONLY                    */
     )) {
@@ -54,10 +54,10 @@ try {
     }
 
     if (!move_uploaded_file(                             /* Function() moves uploaded file to destination */
-      $_FILES['file-select']['tmp_name'],                /* File to print *********************************/
-        sprintf('./testdata/%s.%s',                      /* Printing file name ****************************/
-          sha1_file($_FILES['file-select']['tmp_name']), /* Hashing function for security *****************/
-            $ext)                                        /* File extension *******************************/
+      $_FILES['file-select']['tmp_name'],                /* File to print                                 */
+        sprintf('./testdata/%s.%s',                      /* Printing file name                            */
+          sha1_file($_FILES['file-select']['tmp_name']), /* Hashing function for security                 */
+            $ext)                                        /* File extension                                */
     )
   ) {
         throw new RuntimeException('Failed to move uploaded file.');
@@ -66,9 +66,7 @@ try {
     echo 'File is uploaded successfully.';
 
 } catch (RuntimeException $e) {
-
     echo $e->getMessage();
-
 }
 
 /*********************************************************************************************

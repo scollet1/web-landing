@@ -4,7 +4,7 @@ var uploadButton = document.getElementById('upload-button');
 
 form.onsubmit = function(event) {
   event.preventDefault();
-  console.log("Test1");
+  console.log("Test Enter function()");
   // Update button text using innerHTML;
   uploadButton.innerHTML = 'Uploading...';
 
@@ -15,20 +15,18 @@ form.onsubmit = function(event) {
 
   // Check the file type.
   file = files[0];
-  if (!file.type.match('\\*\\.jgrv')) {
+  if (!file.type.match('*.jgrv')) {
     alert('Not a valid file type, please use the .jgrv extension');
   }
   else {
-    formData.append("file-select", file, file.name);
+    formData.append('file-select', file, file.name);
   }
-  /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
   /**************************************************
   ** TODO : Validate file input for .jgrav extension;
-  ** I don't know if this actually works;
+  ** TODO : ;
   **************************************************/
 
-  // Add the file to the request.
-  formData.append('data', file, file.name);
   // Set up the request.
   var xhr = new XMLHttpRequest();
   // Open the connection.
