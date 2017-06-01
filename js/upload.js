@@ -15,6 +15,7 @@ form.onsubmit = function(event) {
 
   // Check the file type.
   file = files[0];
+<<<<<<< HEAD
 
   /*
   **if (!file.type.match('*.jgrv')) {
@@ -25,6 +26,14 @@ form.onsubmit = function(event) {
   **}
   */
 
+=======
+  if (!file.type.match('*.jgrv')) {
+    alert('Not a valid file type, please use the .jgrv extension');
+  }
+  //else {
+    formData.append('file-select', file, file.name);
+  //}
+>>>>>>> 8332ae60cb7f5d7e7e68e734ff99680494164315
   /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
   /**************************************************
   ** TODO : Validate file input for .jgrav extension;
