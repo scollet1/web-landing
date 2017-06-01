@@ -30,7 +30,7 @@ form.onsubmit = function(event) {
   // Set up the request.
   var xhr = new XMLHttpRequest();
   // Open the connection.
-  xhr.open('POST', "file:///nfs/2017/s/scollet/web-landing/handler.php", true); /* ARGUMENTS : HTTP Method=POST, URL Handler=handler.php, Asynchronous request?=true */
+  xhr.open('PUT', "https://scollet1.github.io/web-landing-testing/handler.php", true); /* ARGUMENTS : HTTP Method=POST, URL Handler=handler.php, Asynchronous request?=true */
   // Set up a handler for when the request finishes.
   xhr.onload = function() {
     if (xhr.status === 200) {
