@@ -36,7 +36,7 @@ form.onsubmit = function(event) {
   // Open the connection.
   xhr.open('POST', "https://scollet1.github.io/web-landing-testing/handler.php", true); /* ARGUMENTS : HTTP Method=POST, URL Handler=handler.php, Asynchronous request?=true */
   // Set up a handler for when the request finishes.
-  xhr.setRequestHeader(Accept, 'POST');
+  xhr.setRequestHeader('Accept', 'POST');
 
   xhr.onload = function() {
     if (xhr.status === 200) {
